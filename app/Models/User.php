@@ -48,6 +48,7 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
 
     /**
@@ -58,4 +59,25 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+        /**
+     * Get the permission associated with the user.
+     */
+    public function permission() {
+        return $this->hasOne(Permission::class);
+    }
+
+    /**
+     * Get the posts associated with the user.
+     */
+    public function posts() {
+        return $this->hasMany(Post::class);
+    }
+
+    /**
+     * Get the replies associated with the user.
+     */
+    public function replies() {
+        return $this->hasMany(Reply::class);
+    }
 }
