@@ -36,3 +36,5 @@ Route::middleware([
         return view('feed');
     })->name('feed');
 });
+
+Route::get('/test', 'App\Http\Controllers\FeedController@showFeedData');

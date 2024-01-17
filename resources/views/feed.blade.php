@@ -11,36 +11,30 @@
         <!-- Posts Section -->
         <section class="w-full md:w-3/3 grid grid-cols-3 gap-6 place-items-stretch px-3">
 
-            <article class="flex flex-col shadow my-4 hover:opacity-90">
-                <!-- Article Image -->
-                <a href="#" class="border-2 border-purple-800 rounded-t-xl overflow-hidden">
-                    <img src="https://source.unsplash.com/collection/1346951/750x500?sig=1">
-                </a>
-                <div class="bg-white flex flex-col justify-start p-6 border-2 border-purple-800 rounded-b-xl">
-                    <a href="#" class="text-purple-800 text-sm font-bold uppercase pb-4">Technology</a>
-                    <a href="#" class="text-3xl font-bold hover:text-purple-400 pb-4">Lorem Ipsum Dolor Sit Amet
-                        Dolor Sit Amet</a>
-                    <p href="#" class="text-sm pb-3">
-                        By <a href="#" class="font-semibold hover:text-purple-400">David Grzyb</a>, Published on
-                        April 25th, 2020
-                    </p>
-                    <a href="#" class="pb-6 hover:text-purple-400">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus
-                        quis porta dui. Ut eu iaculis massa. Sed ornare ligula lacus, quis iaculis dui porta volutpat.
-                        In sit amet posuere magna..</a>
-                </div>
-            </article>
+            @foreach($posts as $post)
+                <article class="flex flex-col shadow my-4 hover:opacity-90">
+                    <!-- Article Image -->
+                    <a href="#" class="border-2 border-purple-800 rounded-t-xl overflow-hidden">
+                        <img src="{{ $post->thumbnail_path}}">
+                    </a>
+                    <div class="bg-white flex flex-col justify-start p-6 border-2 border-purple-800 rounded-b-xl">
+                        <a href="#" class="text-purple-800 text-sm font-bold uppercase pb-4">{{ $post->topic->title}}</a>
+                        <a href="#" class="text-3xl font-bold hover:text-purple-400 pb-4">{{ $post->title }}</a>
+                        <p href="#" class="text-sm pb-3">
+                            By <a href="#" class="font-semibold hover:text-purple-400">{{ $post->user->name }}</a>, Published on
+                            {{ $post->created_at->format('d-m-y') }}
+                        </p>
+                        <a href="#" class="pb-6 hover:text-purple-400">{{ $post->content }}</a>
+                    </div>
+                </article>
+            @endforeach
+            
 
         </section>
 
         <!-- Pagination -->
         <div class="w-auto flex items-center justify-self-center py-8 mx-auto">
-            <a href="#"
-                class="h-10 w-10 bg-purple-800 hover:bg-purple-600 font-semibold text-white text-sm flex items-center justify-center">1</a>
-            <a href="#"
-                class="h-10 w-10 font-semibold text-gray-200 hover:bg-purple-600 hover:text-white text-sm flex items-center justify-center">2</a>
-            <a href="#"
-                class="h-10 w-10 font-semibold text-gray-200 hover:text-purple-400 text-sm flex items-center justify-center ml-3">Next
-                <i class="fas fa-arrow-right ml-2"></i></a>
+            {{ $posts->links('vendor.pagination.tailwind') }}
         </div>
 
     </div>
