@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,16 +26,17 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-});
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
     Route::get('/feed', function () {
         return view('feed');
     })->name('feed');
-});
 
+    Route::get('admin/userdash', 'App\Http\Controllers\AdminController@allowUserDashAccess')->name('admin@checkPermissions');
+
+    Route::get('admin/userdash/delete/{id}', 'App\Http\Controllers\AdminController@deleteUser')->name('admin@deleteUser');
+
+    Route::get('admin/userdash/{id}', 'App\Http\Controllers\AdminController@specifyUser')->name('admin@specifyUser');
+
+    Route::post('admin/userdash/update/{id?}', 'App\Http\Controllers\AdminController@updateUser')->name('admin@updateUser');
+});
 Route::get('/test', 'App\Http\Controllers\FeedController@showFeedData');
