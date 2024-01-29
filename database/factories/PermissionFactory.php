@@ -24,6 +24,7 @@ class PermissionFactory extends Factory {
             'delete_reply' => $muted,
             'delete_others_reply' => fake()->boolean(),
             'delete_others_post' => fake()->boolean(),
+            'manage_topics' => fake()->boolean(),
             'manage_others' => fake()->boolean(),
         ];
     }

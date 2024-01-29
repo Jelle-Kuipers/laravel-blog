@@ -122,6 +122,13 @@
             </td>
         </tr>
         <tr>
+            <th>Onderwerpen beheren</th>
+            <td class="border-gray-400 border-r-2 p-2">
+                <input type="checkbox" name="manage_topics"
+                    {{ $specifiedUser ? ($specifiedUser->permission->manage_topics ? 'checked' : '') : '' }}>
+            </td>
+        </tr>
+        <tr>
             <th>Anderen beheren</th>
             <td class="border-gray-400 border-r-2 p-2">
                 <input type="checkbox" name="manage_others"

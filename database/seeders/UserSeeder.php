@@ -12,11 +12,6 @@ class UserSeeder extends Seeder {
      * Run the database seeds.
      */
     public function run(): void {
-        User::factory()
-            ->has(Permission::factory()->count(1))
-            ->count(50)
-            ->create();
-
         if (User::where('name', 'admin')->exists()) {
             return;
         } else {
@@ -30,6 +25,7 @@ class UserSeeder extends Seeder {
                             'delete_reply' => 1,
                             'delete_others_reply' => 1,
                             'delete_others_post' => 1,
+                            'manage_topics' => 1,
                             'manage_others' => 1,
                         ])
                         ->count(1)
@@ -42,5 +38,9 @@ class UserSeeder extends Seeder {
                 ->count(1)
                 ->create();
         }
+        User::factory()
+        ->has(Permission::factory()->count(1))
+        ->count(50)
+        ->create();
     }
 }

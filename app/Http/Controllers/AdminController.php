@@ -94,6 +94,7 @@ class AdminController extends Controller {
         $permission->delete_reply = (request('delete_reply') === 'on') ? 1 : 0;
         $permission->delete_others_reply = (request('delete_others_reply') === 'on') ? 1 : 0;
         $permission->delete_others_post = (request('delete_others_post') === 'on') ? 1 : 0;
+        $permission->manage_topics = (request('manage_topics') === 'on') ? 1 : 0;
         $permission->manage_others = (request('manage_others') === 'on') ? 1 : 0;
         $permission->save();
 
