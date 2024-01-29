@@ -38,5 +38,9 @@ Route::middleware([
     Route::get('admin/userdash/{id}', 'App\Http\Controllers\AdminController@specifyUser')->name('admin@specifyUser');
 
     Route::post('admin/userdash/update/{id?}', 'App\Http\Controllers\AdminController@updateUser')->name('admin@updateUser');
+
+    Route::get('admin/topicdash', 'App\Http\Controllers\TopicController@allowTopicDashAccess')->name('topic@allowTopicDashAccess');
+
+    Route::post('admin/topicdash/create', 'App\Http\Controllers\TopicController@createTopic')->name('topic@createTopic');
 });
 Route::get('/test', 'App\Http\Controllers\FeedController@showFeedData');
