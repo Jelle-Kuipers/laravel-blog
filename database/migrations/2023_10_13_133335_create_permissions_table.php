@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->boolean('delete_reply')->default(1);
             $table->boolean('delete_others_reply')->default(0); //Allows user A to delete User B's Reply 
             $table->boolean('delete_others_post')->default(0); //Allows user A to delete User B's Post
+            $table->boolean('manage_topics')->default(0);
             $table->boolean('manage_others')->default(0); //Allows user A to CRUD user B
             $table->timestamps();
         });
