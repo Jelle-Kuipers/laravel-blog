@@ -9,17 +9,20 @@ class Permission extends Model {
     use HasFactory;
 
     /**
-     * The attributes that should be cast.
+     * The attributes that are mass assignable.
      *
-     * @var array<string, string>
+     * @var array<int, string>
      */
-    protected $casts = [
-        'create_update_post' => 'boolean',
-        'create_update_reply' => 'boolean',
-        'delete_post' => 'boolean',
-        'delete_reply' => 'boolean',
-        'delete_others_post' => 'boolean',
-        'manage_others' => 'boolean',
+    protected $fillable = [
+        'title',
+        'create_update_post',
+        'create_update_reply',
+        'delete_post',
+        'delete_reply',
+        'delete_others_post',
+        'delete_others_reply',
+        'manage_topics',
+        'manage_others',
     ];
 
     /**
