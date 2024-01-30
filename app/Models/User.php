@@ -10,8 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
-{
+class User extends Authenticatable {
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
@@ -60,7 +59,7 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
-        /**
+    /**
      * Get the permission associated with the user.
      */
     public function permission() {
@@ -77,7 +76,17 @@ class User extends Authenticatable
     /**
      * Get the replies associated with the user.
      */
-    public function replies() {
-        return $this->hasMany(Reply::class);
+    // public function replies() {
+    //     return $this->hasMany(Reply::class);
+    // }
+
+    public function hasPermissions($name) {
+        $permissions = Permission::where('user_id', $this->id)->first();
+
+        if ($permissions) {
+            return $permissions->$name;
+        }
+
+        return false;
     }
 }
