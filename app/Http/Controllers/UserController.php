@@ -79,20 +79,36 @@ class UserController extends Controller {
 
         // If not, find the specified user
         $user = User::find($id);
-        $permission = Permission::where('user_id', $user->id)->first();
 
         // Filter out empty and unnecessary request parameters
-        $data = array_filter(request()->except('_token', 'id'), function ($value) {
+        $data = array_filter(request()->except('_token', 'id'), function ($value) { // We filter out the ID, since this should not be updated
             return $value !== null && $value !== '';
         });
 
-        // Morph the 'on' values to 1
-        $data = array_map(function ($value) {
-            return $value === 'on' ? 1 : $value;
-        }, $data);
-
-        // Update the user and permission
+        // Update the user
         $user->update($data);
+
+        // Check and set permissions to 0 if unset, and 1 if set
+        $permissions = [
+            'create_update_post',
+            'delete_post',
+            'create_update_reply',
+            'delete_reply',
+            'delete_others_reply',
+            'delete_others_post',
+            'manage_topics',
+            'manage_others'
+        ];
+        foreach ($permissions as $permission) {
+            if (!isset($data[$permission])) {
+                $data[$permission] = 0;
+            } else {
+                $data[$permission] = 1;
+            }
+        }
+
+        // Update the permission
+        $permission = Permission::where('user_id', $user->id)->first(); // Retrieve the permission object
         $permission->update($data);
 
         // Return to the specified user
