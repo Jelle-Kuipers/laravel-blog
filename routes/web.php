@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,7 +38,7 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
-    'can:view,App\Models\User',
+    'can:viewAny,App\Models\User',
 ])->group(function () {
 
     Route::get('admin/users', 'App\Http\Controllers\UserController@viewAllUsers')->name('user@viewAllUsers');
@@ -48,9 +47,9 @@ Route::middleware([
 
     Route::post('admin/user/create', 'App\Http\Controllers\UserController@createUser')->name('user@createUser');
 
-    Route::post('admin/user/update', 'App\Http\Controllers\UserController@updateUser')->name('user@updateUser');
+    Route::post('admin/user/update/{id}', 'App\Http\Controllers\UserController@updateUser')->name('user@updateUser');
 
-    Route::post('admin/user/delete', 'App\Http\Controllers\UserController@deleteUser')->name('user@deleteUser');
+    Route::post('admin/user/delete/{id}', 'App\Http\Controllers\UserController@deleteUser')->name('user@deleteUser');
 });
 
 // Requires manage_topics permission to access.

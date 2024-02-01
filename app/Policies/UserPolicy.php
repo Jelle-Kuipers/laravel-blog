@@ -10,7 +10,6 @@ class UserPolicy {
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool {
-        dd($user->hasPermissions('manage_others'));
         return $user->hasPermissions('manage_others');
     }
 

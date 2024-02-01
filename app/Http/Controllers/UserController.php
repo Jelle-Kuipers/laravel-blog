@@ -8,62 +8,27 @@ use App\Models\User;
 
 class UserController extends Controller {
 
-    protected $user;
-
-    public function __construct() {
-        $this->user = Auth::user();
-    }
-
     // Create
     public function createUser() {
-        $this->authorize('create', $this->user);
+        $this->authorize('create', User::class);
 
-
-    }
-
-    // Read
-    public function viewAllUsers() {
-        $this->authorize('viewAny', $this->user);
-
-        $users = User::paginate(10);
-        return view('userdash', ['users' => $users]);
-    }
-
-    // Update
-    public function updateUser($id) {
-        $this->authorize('update', $this->user);
-        
-        // Check request params
-        if (empty(request()->all())) {
+        // Check if the request has all required fields
+        if (
+            empty(request()->all()) ||
+            !request('name') || !request('email') || !request('password') || !request('title')
+        ) {
             abort(400, 'Missing required fields.');
         }
 
-        // Check if a user is specified
-        if (Auth::user()->id == $id) {
-            // If so, abort with a 403 error
-            abort(403, 'You are not able to update yourself.');
-        }
-
-        // If not, find the specified user
-        $user = User::find($id);
-        $permission = Permission::where('user_id', $user->id)->first();
-
-        // Update the user's information
+        // Create the user
+        $user = new User();
         $user->name = request('name');
         $user->email = request('email');
-
-        // If there is no password set,
-        if (request('password') == null) {
-            // Use old password
-            $user->password = $user->password;
-        } else {
-            // Otherwise, set the password to the new password
-            $user->password = bcrypt(request('password'));
-        }
-
+        $user->password = bcrypt(request('password'));
         $user->save();
 
-        // And permissons
+        // Create the permission
+        $permission = new Permission();
         $permission->user_id = $user->id;
         $permission->title = request('title');
         $permission->create_update_post = (request('create_update_post') === 'on') ? 1 : 0;
@@ -76,15 +41,70 @@ class UserController extends Controller {
         $permission->manage_others = (request('manage_others') === 'on') ? 1 : 0;
         $permission->save();
 
-        return redirect()->back();
+        // Redirect to the specified user
+        return redirect(route('user@specifyUser', $user->id));
+    }
+
+    // Read: list of all users
+    public function viewAllUsers() {
+        $this->authorize('viewAny', User::class);
+
+        // Get all users, in a paginated form
+        $users = User::paginate(10);
+        return view('users', ['users' => $users, 'specifiedUser' => null]);
+    }
+
+    // Read: a specific user
+    public function specifyUser($id = null) {
+        $this->authorize('viewAny', User::class);
+
+        $specifiedUser = User::with('permission')->find($id);
+        return view('users', ['specifiedUser' => $specifiedUser]);
+    }
+
+    // Update
+    public function updateUser($id) {
+        $this->authorize('update', User::class);
+
+        // Check request params
+        if (empty(request()->all())) {
+            abort(400, 'Missing required fields.');
+        }
+
+        // Check if the user is trying to update themselves
+        if (Auth::user()->id == $id) {
+            // If so, abort with a 403 error
+            abort(403, 'You are not able to update yourself.');
+        }
+
+        // If not, find the specified user
+        $user = User::find($id);
+        $permission = Permission::where('user_id', $user->id)->first();
+
+        // Filter out empty and unnecessary request parameters
+        $data = array_filter(request()->except('_token', 'id'), function ($value) {
+            return $value !== null && $value !== '';
+        });
+
+        // Morph the 'on' values to 1
+        $data = array_map(function ($value) {
+            return $value === 'on' ? 1 : $value;
+        }, $data);
+
+        // Update the user and permission
+        $user->update($data);
+        $permission->update($data);
+
+        // Return to the specified user
+        return redirect(route('user@specifyUser', $user->id));
     }
 
     // Delete
     public function deleteUser($id) {
-
+        $this->authorize('delete', User::class);
 
         // Check if the user is trying to delete themselves
-        if ($this->user->id == $id) {
+        if (Auth::user()->id == $id) {
             // If so, abort with a 403 error
             abort(403, 'You are not able to delete yourself.');
         } else {
@@ -93,12 +113,5 @@ class UserController extends Controller {
             $user->delete();
             return redirect()->back();
         }
-    }
-
-    public function specifyUser($id,) {
-        $this->authorize('viewAny', $this->user);
-
-        $specifiedUser = User::with('permission')->find($id);
-        return view('userdash', ['specifiedUser' => $specifiedUser]);
     }
 }
