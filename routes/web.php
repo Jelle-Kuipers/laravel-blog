@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,10 +13,12 @@ use App\Http\Controllers\AdminController;
 |
 */
 
+// Login screen, anyone can access
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Anyone that is logged in can access
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -30,18 +31,25 @@ Route::middleware([
     Route::get('/feed', function () {
         return view('feed');
     })->name('feed');
+});
 
-    Route::get('/topic/{id}', function () {
-        return view('topic');
-    })->name('topic');
+// Requires manage_users permission to access.
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'can:viewAny,App\Models\User',
+])->group(function () {
 
-    Route::get('admin/users', 'App\Http\Controllers\AdminController@allowUserDashAccess')->name('admin@checkPermissions');
+    Route::get('admin/users', 'App\Http\Controllers\UserController@viewAllUsers')->name('user@viewAllUsers');
 
-    Route::get('admin/userdash/delete/{id}', 'App\Http\Controllers\AdminController@deleteUser')->name('admin@deleteUser');
+    Route::get('admin/user/{id}', 'App\Http\Controllers\UserController@specifyUser')->name('user@specifyUser');
 
-    Route::get('admin/user/{id}', 'App\Http\Controllers\AdminController@specifyUser')->name('admin@specifyUser');
+    Route::post('admin/user/create', 'App\Http\Controllers\UserController@createUser')->name('user@createUser');
 
-    Route::post('admin/user/update/{id?}', 'App\Http\Controllers\AdminController@updateUser')->name('admin@updateUser');
+    Route::post('admin/user/update/{id}', 'App\Http\Controllers\UserController@updateUser')->name('user@updateUser');
+
+    Route::post('admin/user/delete/{id}', 'App\Http\Controllers\UserController@deleteUser')->name('user@deleteUser');
 });
 
 // Requires manage_topics permission to access.
@@ -49,7 +57,7 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
-    'can:manage_topics'
+    'can:viewAny,App\Models\Topic',
 ])->group(function () {
     Route::get('admin/topics', function() {
         return view('topics');
@@ -61,7 +69,3 @@ Route::middleware([
 
     Route::post('admin/topic/delete', 'App\Http\Controllers\TopicController@deleteTopic')->name('topic@deleteTopic');
 });
-
-
-
-Route::get('/test', 'App\Http\Controllers\FeedController@showFeedData');

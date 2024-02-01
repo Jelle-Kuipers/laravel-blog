@@ -2,30 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Permission;
 use App\Models\Topic;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 
 class TopicController extends Controller {
 
+    protected $user;
 
-    private function checkPermissions() {
-        $permissions = Permission::get()->where('id', Auth::user()->id)->first();
-        if ($permissions->manage_topics == True) {
-            return true;
-        } else {
-            return false;
-        }
+    public function __construct() {
+        $this->user = Auth::user();
     }
 
-    // Function to create a topic
+    // Create
     public function createTopic() {
+        $this->authorize('create', Topic::class);
+
         $topic = new Topic;
         // Check if required fields are filled
-        if (!request()->title || !request()->description || !request()->thumbnail) {
+        if (empty(request()->all())) {
             abort(400, 'Missing required fields.');
         }
         $topic->title = request()->title;
@@ -38,35 +33,35 @@ class TopicController extends Controller {
 
     // Update
     public function updateTopic() {
+        $this->authorize('update', Topic::class);
+
         // Check if any request parameter is valid or filled
         if (!request()->filled('title') && !request()->filled('description') && !request()->hasFile('thumbnail') || !request()->filled('id')) {
             abort(400, 'No valid or filled request parameters.');
         } else {
             $topic = Topic::get()->where('id', request()->id)->first();
         }
-
-        // Replace the old description if a new one is given
-        if (request()->filled('title')) {
-            $topic->title = request()->title;
-        }
-
-        // Replace the old description if a new one is given.
-        if (request()->filled('description')) {
-            $topic->description = request()->description;
-        }
+        
+        // Filter out empty request parameters
+        $data = array_filter(request()->except('_token', 'id'), function($value) {
+            return $value !== null && $value !== '';
+        });
 
         // Replace the old thumbnail if a new one is uploaded.
         if (request()->hasFile('thumbnail')) {
             $this->deleteThumbnail($topic->thumbnail_path);
             $thumbnailpath = $this->saveThumbnail(request()->file('thumbnail'));
-            $topic->thumbnail_path = $thumbnailpath;
+            $data['thumbnail_path'] = $topic->thumbnail_path = $thumbnailpath;
         }
-        $topic->save();
+
+        // Save the changes
+        $topic->update($data);
         return redirect()->back();
     }
 
     // Delete
     public function deleteTopic() {
+        $this->authorize('delete', Topic::class);
         $topic = Topic::get()->where('id', request()->id)->first();
 
         // Delete the thumbnail
@@ -116,8 +111,7 @@ class TopicController extends Controller {
             unlink($filePath);
             return true;
         } else {
-            dd('No file found.');
-            abort(400, 'File does not exist.');
+            return false;
         }
     }
 }
