@@ -13,6 +13,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('topic_id')->constrained('topics')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('description')->default('A description.');
             $table->string('title')->default('New Post');
             $table->string('thumbnail_path')->nullable();
             $table->longText('content');

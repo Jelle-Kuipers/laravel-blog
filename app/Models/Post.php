@@ -9,6 +9,20 @@ class Post extends Model {
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string, string>
+     */
+    protected $fillable = [
+        'content',
+        'title',
+        'topic_id',
+        'user_id',
+        'thumbnail_path',
+        'description',
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>

@@ -69,3 +69,20 @@ Route::middleware([
 
     Route::post('admin/topic/delete', 'App\Http\Controllers\TopicController@deleteTopic')->name('topic@deleteTopic');
 });
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'can:viewAny,App\Models\Post',
+])->group(function () {
+    Route::get('posts', function() {
+        return view('posts');
+    })->name('posts');
+
+    Route::post('post/create', 'App\Http\Controllers\PostController@createPost')->name('post@createPost');
+
+    Route::post('post/update', 'App\Http\Controllers\PostController@updatePost')->name('post@updatePost');
+
+    Route::post('post/delete', 'App\Http\Controllers\PostController@deletePost')->name('post@deletePost');
+});
