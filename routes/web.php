@@ -31,6 +31,10 @@ Route::middleware([
     Route::get('/feed', function () {
         return view('feed');
     })->name('feed');
+
+    Route::get('/posts', 'App\Http\Controllers\PostController@readPosts')->name('post@readPosts');
+    Route::get('/post/{id}/vote', 'App\Http\Controllers\PostController@voteOnPost')->name('post@VoteOnPost');
+    Route::get('/post/{id}/unvote', 'App\Http\Controllers\PostController@removeVoteOnPost')->name('post@UnvoteOnPost');
 });
 
 // Requires manage_users permission to access.
@@ -70,15 +74,13 @@ Route::middleware([
     Route::post('admin/topic/delete', 'App\Http\Controllers\TopicController@deleteTopic')->name('topic@deleteTopic');
 });
 
+// Requires create_update_posts / delete_posts permission and ownership OR delete_others_post permission.
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
     'can:viewAny,App\Models\Post',
 ])->group(function () {
-    Route::get('posts', function() {
-        return view('posts');
-    })->name('posts');
 
     Route::post('post/create', 'App\Http\Controllers\PostController@createPost')->name('post@createPost');
 
