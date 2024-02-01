@@ -82,7 +82,6 @@ class User extends Authenticatable {
 
     public function hasPermissions($name) {
         $permissions = Permission::where('user_id', $this->id)->first();
-
         if ($permissions) {
             return $permissions->$name;
         }

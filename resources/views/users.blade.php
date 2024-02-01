@@ -18,9 +18,11 @@
             <tr class="{{ $key % 2 == 0 ? '' : 'bg-gray-300' }}">
                 <td class="border-gray-400 border-r-2 p-2">
                     <a class="mr-2 text-gray-200 bg-yellow-500 p-2 rounded-full hover:bg-yellow-400 hover:text-white"
-                        href="{{ route('admin@specifyUser', ['id' => $user->id]) }}">Edit</a>
-                    <a class="text-gray-200 bg-red-500 p-2 rounded-full hover:bg-red-400 hover:text-white"
-                        href="{{ route('admin@deleteUser', ['id' => $user->id]) }}">Delete</a>
+                        href="{{ route('user@specifyUser', ['id' => $user->id]) }}">Edit</a>
+                        <form action="{{ route('user@deleteUser', ['id' => $user->id]) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="mr-2 text-gray-200 bg-red-500 p-2 rounded-full hover:bg-red-400 hover:text-white">Delete</button>
+                        </form>
                 </td>
                 <td class="border-gray-400 border-r-2 p-2">{{ $user->id }}</td>
                 <td class="border-gray-400 border-r-2 p-2">{{ $user->name }}</td>
@@ -37,15 +39,14 @@
     {{ $users->links('vendor.pagination.tailwind') }}
 </div>
 
-
 @endisset
 
 @isset($specifiedUser)
-    <h1>Editing {{ $specifiedUser->name }}, to make a new user go <a href="http://localhost/admin/userdash/">here</a></h1>
+    <h1>Editing {{ $specifiedUser->name }}, to make a new user go <a href="">here</a></h1>
 @endisset
 
 <form
-    action="{{ $specifiedUser ? route('admin@updateUser', ['id' => $specifiedUser->id]) : route('admin@updateUser') }}"
+    action="{{ $specifiedUser ? route('user@updateUser', ['id' => $specifiedUser->id]) : route('user@createUser') }}"
     method="POST">
     @csrf
     @method('POST')

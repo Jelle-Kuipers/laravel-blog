@@ -9,6 +9,17 @@ class Topic extends Model {
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'title',
+        'description',
+        'thumbnail_path',
+    ];
+
+    /**
      * Get the posts associated with the topic.
      */
     public function posts() {
