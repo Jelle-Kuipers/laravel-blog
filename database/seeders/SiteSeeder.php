@@ -2,14 +2,13 @@
 
 namespace Database\Seeders;
 
-
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use App\Models\Topic;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\PostVote;
 
 class SiteSeeder extends Seeder {
     /**
@@ -37,5 +36,17 @@ class SiteSeeder extends Seeder {
                     )
             )
             ->create();
+
+        for ($i = 0; $i < 50; $i++) {
+            do {
+                $userId = User::all()->random()->id;
+                $postId = Post::all()->random()->id;
+            } while (PostVote::where('user_id', $userId)->where('post_id', $postId)->exists());
+
+            PostVote::factory()->create([
+                'user_id' => $userId,
+                'post_id' => $postId,
+            ]);
+        }
     }
 }

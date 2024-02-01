@@ -21,7 +21,6 @@ class PostFactory extends Factory {
             'description' => fake()->sentence(2),
             'thumbnail_path' => 'https://source.unsplash.com/random/800x600',
             'content' => fake()->sentence(3),
-            'score' => fake()->randomFloat(2, 0, 100),
         ];
     }
 }

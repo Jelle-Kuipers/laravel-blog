@@ -80,6 +80,19 @@ class User extends Authenticatable {
     //     return $this->hasMany(Reply::class);
     // }
 
+    /**
+     * Get the votes associated with the user.
+     */
+    public function votes() {
+        return $this->hasMany(PostVote::class);
+    }
+
+    /**
+     * Check if the user has permissions.
+     *
+     * @param string $name
+     * @return bool
+     */
     public function hasPermissions($name) {
         $permissions = Permission::where('user_id', $this->id)->first();
         if ($permissions) {

@@ -52,4 +52,11 @@ class Post extends Model {
     public function user() {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Get the votes associated with the post.
+     */
+    public function votes() {
+        return $this->hasMany(PostVote::class);
+    }
 }
