@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->string('title')->default('New Post');
             $table->string('thumbnail_path')->nullable();
             $table->longText('content');
-            $table->float('score', 8, 0)->default(0);
             $table->timestamps();
         });
     }
