@@ -24,13 +24,12 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-
     Route::get('/feed', function () {
         return view('feed');
     })->name('feed');
+
+    // Dashboard
+    Route::get('/dashboard', 'App\Http\Controllers\DashController@showAuthUser')->name('dash@showAuthUser');
 
     Route::get('/posts', 'App\Http\Controllers\PostController@readPosts')->name('post@readPosts');
     Route::get('/post/{id}/vote', 'App\Http\Controllers\PostController@voteOnPost')->name('post@VoteOnPost');
