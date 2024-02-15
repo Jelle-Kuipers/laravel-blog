@@ -54,4 +54,14 @@ class UserPolicy {
     public function forceDelete(User $user): bool {
         return $user->hasPermissions('manage_others');
     }
+
+    /**
+     * Determine whether the user has any admin permissions
+     */
+    public function isAdmin(User $user): bool {
+
+        if ($user->hasPermissions('manage_others') || $user->hasPermissions('manage_topics')) {
+            return true;
+        };
+    }
 }

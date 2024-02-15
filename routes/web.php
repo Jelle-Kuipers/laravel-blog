@@ -29,11 +29,21 @@ Route::middleware([
     })->name('feed');
 
     // Dashboard
-    Route::get('/dashboard', 'App\Http\Controllers\DashController@showAuthUser')->name('dash@showAuthUser');
+    Route::get('/dashboard', function () {
+        return view('dash');
+    })->name('dash@show');
 
+    // Posts and voting
     Route::get('/posts', 'App\Http\Controllers\PostController@readPosts')->name('post@readPosts');
     Route::get('/post/{id}/vote', 'App\Http\Controllers\PostController@voteOnPost')->name('post@VoteOnPost');
     Route::get('/post/{id}/unvote', 'App\Http\Controllers\PostController@removeVoteOnPost')->name('post@UnvoteOnPost');
+
+    // User profile
+
+    // Topics
+    Route::get('/topics', function () {
+        return view('topics');
+    })->name('topic@seeTopics');
 });
 
 // Requires manage_users permission to access.
@@ -62,9 +72,6 @@ Route::middleware([
     'verified',
     'can:viewAny,App\Models\Topic',
 ])->group(function () {
-    Route::get('admin/topics', function() {
-        return view('topics');
-    })->name('topics');
 
     Route::post('admin/topic/create', 'App\Http\Controllers\TopicController@createTopic')->name('topic@createTopic');
 
@@ -86,4 +93,17 @@ Route::middleware([
     Route::post('post/update', 'App\Http\Controllers\PostController@updatePost')->name('post@updatePost');
 
     Route::post('post/delete', 'App\Http\Controllers\PostController@deletePost')->name('post@deletePost');
+});
+
+// Only someone who has an admin permission can visist this panel
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+    'can:isAdmin,App\Models\User',
+])->group(function () {
+
+    Route::get('admin/panel', function () {
+        return view('admindash');
+    })->name('admin@panel');
 });
