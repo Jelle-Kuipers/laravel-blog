@@ -1,6 +1,6 @@
 @include('layouts.head')
 {{-- page title --}}
-<title>Fictional Forums - {{ $post->title }}</title>
+<title>Fictional Forums - {{ $post->title  ?: 'Data missing' }}</title>
 @include('layouts.header')
 <div class="container">
     <div class="row">
@@ -11,7 +11,7 @@
                 <header class="mb-4">
                     <!-- Post title-->
                     <div class="d-flex">
-                        <h1 class="fw-bolder mb-1 flex-grow-1">{{ $post->title }}</h1>
+                        <h1 class="fw-bolder mb-1 flex-grow-1">{{ $post->title  ?: 'Data missing' }}</h1>
                         @if ($user->permission->create_update_post == 1 && $user->id == $post->user_id)
                             <a id="switch" class="btn btn-warning d-flex align-items-center"><i id="stopIcon"
                                     class="fa-solid fa-ban d-none"></i> <i id="editIcon"
@@ -29,15 +29,16 @@
                         @endif
                     </div>
                     <!-- Post meta content-->
-                    <div class="text-muted fst-italic mb-2">Posted on {{ $post->created }} by {{ $post->author }}</div>
+                    <div class="text-muted fst-italic mb-2">Posted on {{ $post->created  ?: 'Data missing' }} by {{ $post->author  ?: 'Data missing' }}</div>
                     <!-- Post Topic-->
                     <a class="badge bg-secondary text-decoration-none link-light"
-                        href="#!">{{ $post->topic_title }}</a>
+                        href="#!">{{ $post->topic_title  ?: 'Data missing' }}</a>
                     <div class="d-flex align-items-center flex-grow-1 my-3">
                         <div class="me-2">
-                            Score: {{ $post->score }}
+                            Score: {{ $post->score  ?: 'Data missing' }}
                         </div>
                         <div class="d-flex flex-column">
+                            @isset($post)
                             @if ($post->userHasVoted == false)
                                 <form action={{ route('post@VoteOnPost', ['id' => $post->id]) }} class="p-0 m-0">
                                     @csrf
@@ -78,6 +79,7 @@
                                     </form>
                                 @endif
                             @endif
+                            @endisset
                         </div>
                     </div>
                     <hr>
@@ -85,16 +87,16 @@
                 <div id="post">
                     <!-- Preview image figure-->
                     <figure class="mb-4">
-                        <img class="img-fluid rounded" src={{ $post->thumbnail_path }} alt="post thumbnail"
+                        <img class="img-fluid rounded" src={{ $post->thumbnail_path  ?: 'Data missing' }} alt="post thumbnail"
                             style="max-width: 1920px; max-height: 1080px; min-height: 300px;" />
                     </figure>
                     <hr>
                     <!-- Post content-->
                     <section class="mb-5">
-                        <p class="fs-5 mb-4">{{ $post->description }}</p>
+                        <p class="fs-5 mb-4">{{ $post->description  ?: 'Data missing' }}</p>
                         <hr>
                         <section class="mb-5">
-                            {!! $post->content !!}
+                            {!! $post->content  ?: 'Data missing' !!}
                         </section>
                         <hr>
             </article>
@@ -107,7 +109,7 @@
                 <div class="col-lg-6" style="margin-top: 1.5rem;">
                     <form action="{{ route('post@updatePost') }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        <input type="hidden" name="id" value="{{ $post->id }}">
+                        <input type="hidden" name="id" value={{ $post->id  ?: 'Data missing' }}>
                         <div class="mb-3">
                             <label for="thumbnail" class="form-label">Post Image</label>
                             <input type="file" name="thumbnail" id="thumbnail" class="form-control">
@@ -116,7 +118,7 @@
                             <label for="topic_id" class="form-label">Post Topic</label>
                             <select name="topic_id" id="topic_id" class="form-control">
                                 @foreach ($topics as $topic)
-                                    <option value="{{ $topic->id }}"
+                                    <option value="{{ $topic->id  ?: 'Data missing' }}"
                                         {{ $topic->id == $post->topic_id ? 'selected' : '' }}>{{ $topic->title }}
                                     </option>
                                 @endforeach
@@ -125,12 +127,12 @@
                         <div class="mb-3">
                             <label for="title" class="form-label">Post Title</label>
                             <input type="text" name="title" id="title" class="form-control"
-                                value="{{ $post->title }}">
+                                value="{{ $post->title  ?: 'Data missing' }}">
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label">Post Description</label>
                             <input type="text" name="description" id="description" class="form-control"
-                                value="{{ $post->description }}">
+                                value="{{ $post->description  ?: 'Data missing' }}">
                         </div>
                         <div class="mb-3">
                             <label for="content">Post content</label>
