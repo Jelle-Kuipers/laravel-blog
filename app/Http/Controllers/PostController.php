@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\PostVote;
 use App\Models\Topic;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use App\Helpers\ThumbnailHelper;
 
 class PostController extends Controller
@@ -40,12 +41,13 @@ class PostController extends Controller
 
     // Read
     public function readPosts() {
-        $posts = Post::all();
+        $posts = Post::latest()->paginate(6);
         // add the author name, topic, score and variables for showing upvotes
         foreach ($posts as $post) {
             $post->author = $post->user->name;
             $post->score = $this->calculatePostScore($post->id);
             $post->topic_title = Topic::get()->where('id', $post->topic_id)->first()->title;
+            $post->created = Carbon::createFromFormat('Y-m-d H:i:s', $post->created_at)->format('d M Y H:i');
             if ($this->getUserVoteOnPost($post->id)) {
                 $post->userHasVoted = true;
                 $post->userVote = PostVote::where('user_id', Auth::user()->id)->where('post_id', $post->id)->first()->upvote;
@@ -54,7 +56,12 @@ class PostController extends Controller
                 $post->userVote = null;
             }
         }
-        return view('posts', ['posts' => $posts]);
+        
+        // get topics for the form
+        $topics = Topic::all();
+        
+        // return the view with the posts and topics
+        return view('posts', ['posts' => $posts, 'topics' => $topics]);
     }
 
     // Update

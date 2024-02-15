@@ -1,7 +1,5 @@
 @include('layouts.head')
 @include('layouts.header')
-        <!-- Page Content-->
-        <section>
             <div class="container px-4 px-lg-5 mt-3">
                 <div class="row gx-4 gx-lg-5">
                     <div class="col-lg-6">

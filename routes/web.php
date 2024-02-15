@@ -35,6 +35,7 @@ Route::middleware([
 
     // Posts and voting
     Route::get('/posts', 'App\Http\Controllers\PostController@readPosts')->name('post@readPosts');
+    Route::get('/post/{id}', 'App\Http\Controllers\PostController@readPost')->name('post@readPost');
     Route::get('/post/{id}/vote', 'App\Http\Controllers\PostController@voteOnPost')->name('post@VoteOnPost');
     Route::get('/post/{id}/unvote', 'App\Http\Controllers\PostController@removeVoteOnPost')->name('post@UnvoteOnPost');
 

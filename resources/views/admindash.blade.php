@@ -4,7 +4,6 @@
                 <div class="row gx-4 gx-lg-5">
                     <div class="col-lg-6">
                         <h1 class="mt-5">Fictional forums</h1>
-                        <h1>ADMIN DASH!</h1>
                     </div>
                 </div>
             </div>
