@@ -1,4 +1,3 @@
-</head>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -21,7 +20,5 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     {{-- font awesome icons --}}
     <script src="https://kit.fontawesome.com/d1e08ae9f5.js" crossorigin="anonymous"></script>
-    {{-- WYSIWYG --}}
-    <script src="{{ asset('assets/vendor/ckeditor5/build/ckeditor.js') }}"></script>
 
 </head>

@@ -100,7 +100,7 @@
             </article>
         </div>
 
-        @if ($user->permission->create_update_post == 1)
+        @if ($user->permission->create_update_post == 1 && $post->user_id == $user->id)
             <script src="{{ asset('js/singlepost.js') }}"></script>
             <div id="editPost" class="d-none">
                 <h3>Update this post</h3>
@@ -156,6 +156,17 @@
     </div>
 </div>
 </div>
+@if ($user->permission->create_update_post == 1 && $post->user_id == $user->id)
+    {{-- WYSIWYG --}}
+    <script src="{{ asset('assets/vendor/ckeditor5/build/ckeditor.js') }}"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+@endif
 
 
 @include('layouts.footer')

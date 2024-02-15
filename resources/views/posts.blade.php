@@ -74,7 +74,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="content">Post content</label>
-                                <textarea required type="textarea" class="form-control" id="editor" name="content"></textarea>
+                                <textarea type="textarea" class="form-control" id="editor" name="content"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Create post</button>
                         </form>
@@ -84,6 +84,19 @@
         </div>
     </div>
 </div>
-<script src="{{ asset('js/posts.js') }}"></script>
+@if ($user->permission->create_update_post == 1)
+    {{-- WYSIWYG --}}
+    <script src="{{ asset('assets/vendor/ckeditor5/build/ckeditor.js') }}"></script>
+
+    <script src="{{ asset('js/posts.js') }}"></script>
+
+    <script>
+        ClassicEditor
+            .create( document.querySelector( '#editor' ) )
+            .catch( error => {
+                console.error( error );
+            } );
+    </script>
+@endif
 
 @include('layouts.footer')
