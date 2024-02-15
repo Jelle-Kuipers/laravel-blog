@@ -22,6 +22,6 @@
     {{-- font awesome icons --}}
     <script src="https://kit.fontawesome.com/d1e08ae9f5.js" crossorigin="anonymous"></script>
     {{-- WYSIWYG --}}
-    <script src="assets/vendor/ckeditor5/build/ckeditor.js"></script>
+    <script src="{{ asset('assets/vendor/ckeditor5/build/ckeditor.js') }}"></script>
 
 </head>

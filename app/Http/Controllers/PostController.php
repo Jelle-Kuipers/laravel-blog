@@ -84,9 +84,7 @@ class PostController extends Controller {
 
     // Update
     public function updatePost() {
-
         $post = Post::get()->where('id', request()->id)->first();
-
         $this->authorize('update', $post);
 
         // Filter out empty request parameters
@@ -103,18 +101,18 @@ class PostController extends Controller {
 
         // Save the changes
         $post->update($data);
-        return redirect()->back();
+        return redirect()->route('post@singlePost', ['id' => $post->id]);
     }
 
     // Delete
     public function deletePost() {
-        $post = Post::get()->where('id', request()->id)->first();
 
+        $post = Post::get()->where('id', request()->id)->first();
         $this->authorize('delete', $post);
 
         $this->thumbnailHelper->deleteThumbnail($post->thumbnail_path);
         $post->delete();
-        return redirect()->back();
+        return redirect()->route('post@readPosts');
     }
 
     // VoteOnPost

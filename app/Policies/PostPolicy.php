@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Post;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class PostPolicy
 {
@@ -11,8 +12,12 @@ class PostPolicy
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user)
-    {
-        return $user !== null;
+    {   
+        if ($user->hasPermissions('create_update_post') || $user->hasPermissions('delete_post') || $user->hasPermissions('delete_others_post')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -38,13 +43,9 @@ class PostPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Post $post)
+    public function update(User $user, $post)
     {
-        if ($user->hasPermissions('create_update_post') && $user->id === $post->user_id) {
-            return true;
-        } else {
-            return false;
-        }
+        return $user->hasPermissions('create_update_post') && $user->id === $post->user_id;
     }
 
     /**
