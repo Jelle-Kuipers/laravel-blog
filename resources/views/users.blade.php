@@ -36,7 +36,7 @@
 </div>
 
 <div class="w-auto flex items-center justify-self-center py-8 mx-auto">
-    {{ $users->links('vendor.pagination.tailwind') }}
+    {{ $users->links('vendor.pagination.bootstrap-5') }}
 </div>
 
 @endisset

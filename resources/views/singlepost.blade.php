@@ -18,7 +18,6 @@
             <div id="seePosts">
                 <!-- Posts sorted by age -->
                 <div class="row" style="margin-top: 1.5rem;">
-                    @foreach ($posts as $post)
                         <div class="col-lg-4">
                             <!-- Blog post-->
                             <div class="card mb-4">
@@ -38,11 +37,7 @@
                                 </div>
                             </div>
                         </div>
-                    @endforeach
                 </div>
-                <!-- Pagination-->
-                {{ $posts->links('vendor.pagination.bootstrap-5') }}
-                <hr>
             </div>
             @if ($user->permission->create_update_post == 1)
                 <div id="newPost" class="d-none">

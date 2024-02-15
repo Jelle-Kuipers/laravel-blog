@@ -9,12 +9,10 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\Helpers\ThumbnailHelper;
 
-class PostController extends Controller
-{
+class PostController extends Controller {
     protected $thumbnailHelper;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->thumbnailHelper = new ThumbnailHelper;
     }
 
@@ -36,7 +34,7 @@ class PostController extends Controller
         $post->topic_id = request()->topic_id;
 
         $post->save();
-        return redirect()->back();
+        return redirect()->route('post@readPosts');
     }
 
     // Read
@@ -56,12 +54,32 @@ class PostController extends Controller
                 $post->userVote = null;
             }
         }
-        
+
         // get topics for the form
         $topics = Topic::all();
-        
+
         // return the view with the posts and topics
         return view('posts', ['posts' => $posts, 'topics' => $topics]);
+    }
+
+    // Read single
+    public function singlePost($id) {
+        $post = Post::get()->where('id', $id)->first();
+        $post->author = $post->user->name;
+        $post->score = $this->calculatePostScore($post->id);
+        $post->topic_title = Topic::get()->where('id', $post->topic_id)->first()->title;
+        $post->created = Carbon::createFromFormat('Y-m-d H:i:s', $post->created_at)->format('d M Y H:i');
+        if ($this->getUserVoteOnPost($post->id)) {
+            $post->userHasVoted = true;
+            $post->userVote = PostVote::where('user_id', Auth::user()->id)->where('post_id', $post->id)->first()->upvote;
+        } else {
+            $post->userHasVoted = false;
+            $post->userVote = null;
+        }
+
+        // get topics for the form
+        $topics = Topic::all();
+        return view('singlepost', ['post' => $post, 'topics' => $topics]);
     }
 
     // Update
@@ -72,7 +90,7 @@ class PostController extends Controller
         $this->authorize('update', $post);
 
         // Filter out empty request parameters
-        $data = array_filter(request()->except('_token', 'id'), function($value) {
+        $data = array_filter(request()->except('_token', 'id'), function ($value) {
             return $value !== null && $value !== '';
         });
 
