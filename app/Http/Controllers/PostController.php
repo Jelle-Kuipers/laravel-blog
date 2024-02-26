@@ -33,13 +33,28 @@ class PostController extends Controller {
         $post->thumbnail_path = $thumbnailpath;
         $post->topic_id = request()->topic_id;
 
+        // save the post
         $post->save();
-        return redirect()->route('post@readPosts');
+
+        // add empty vote to post
+        $this->voteNewPost($post->id);
+
+        return redirect()->route('post@singlePost', ['id' => $post->id]);
     }
 
     // Read
-    public function readPosts() {
-        $posts = Post::latest()->paginate(6);
+    public function readPosts(int $topic_id = null) {
+        
+        // If topic_id is given, get posts from that topic, else get all.
+        if ($topic_id) {
+            $posts = Post::where('topic_id', $topic_id)->latest()->paginate(6);
+        } else {
+            $posts = Post::latest()->paginate(6);
+        }
+
+        // get topics for the form
+        $topics = Topic::all();
+
         // add the author name, topic, score and variables for showing upvotes
         foreach ($posts as $post) {
             $post->author = $post->user->name;
@@ -55,8 +70,10 @@ class PostController extends Controller {
             }
         }
 
-        // get topics for the form
-        $topics = Topic::all();
+        // if topic id was given, return just Posts
+        if ($topic_id) {
+            return $posts;
+        }
 
         // return the view with the posts and topics
         return view('posts', ['posts' => $posts, 'topics' => $topics]);
@@ -168,5 +185,18 @@ class PostController extends Controller {
     private function calculatePostScore($id) {
         $score = PostVote::where('post_id', $id)->where('upvote', 1)->count() - PostVote::where('post_id', $id)->where('upvote', 0)->count();
         return $score;
+    }
+
+    // Add a vote to a post (if not already assigned)
+    private function voteNewPost($id) {
+        $post = Post::get()->where('id', $id)->first();
+
+        if (!PostVote::where('user_id', Auth::user()->id)->where('post_id', $post->id)->exists()) {
+            $postvote = new PostVote;
+            $postvote->user_id = Auth::user()->id;
+            $postvote->post_id = $post->id;
+            $postvote->upvote = 1;
+            $postvote->save();
+        }
     }
 }

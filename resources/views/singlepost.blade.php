@@ -32,10 +32,10 @@
                     <div class="text-muted fst-italic mb-2">Posted on {{ $post->created  ?: 'Data missing' }} by {{ $post->author  ?: 'Data missing' }}</div>
                     <!-- Post Topic-->
                     <a class="badge bg-secondary text-decoration-none link-light"
-                        href="#!">{{ $post->topic_title  ?: 'Data missing' }}</a>
+                        href="{{ route('topic@singleTopic', ['id' => $post->topic_id]) }}">{{ $post->topic_title  ?: 'Data missing' }}</a>
                     <div class="d-flex align-items-center flex-grow-1 my-3">
                         <div class="me-2">
-                            Score: {{ $post->score  ?: 'Data missing' }}
+                            Score: {{ $post->score  ?: '0' }}
                         </div>
                         <div class="d-flex flex-column">
                             @isset($post)

@@ -42,9 +42,8 @@ Route::middleware([
     // User profile
 
     // Topics
-    Route::get('/topics', function () {
-        return view('topics');
-    })->name('topic@seeTopics');
+    Route::get('/topics', 'App\Http\Controllers\TopicController@readTopics')->name('topic@readTopics');
+    Route::get('/topic/{id}/posts', 'App\Http\Controllers\TopicController@singleTopic')->name('topic@singleTopic');
 });
 
 // Requires manage_users permission to access.

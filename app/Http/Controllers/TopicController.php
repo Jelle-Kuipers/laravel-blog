@@ -6,6 +6,7 @@ use App\Models\Topic;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\ThumbnailHelper;
 use Carbon\Carbon;
+use App\Http\Controllers\PostController;
 
 class TopicController extends Controller {
 
@@ -44,6 +45,15 @@ class TopicController extends Controller {
 
         // return the view with the posts and topics
         return view('topics', ['topics' => $topics]);
+    }
+
+    // Read single
+    public function singleTopic($id) {
+        $topic = Topic::get()->where('id', $id)->first();
+        $postController = new PostController;
+        $posts = $postController->readPosts($id);
+
+        return view('singletopic', ['topic' => $topic, 'posts' => $posts]);
     }
 
     // Update

@@ -20,7 +20,7 @@ class ViewProvider extends ServiceProvider {
     public function boot(): void {
         // Using class based composers...
         View::composer(
-            ['layouts.header', 'dash', 'posts','singlepost', 'topics'], // replace with your header view
+            ['layouts.header', 'dash', 'posts','singlepost', 'topics', 'singletopic'], // replace with your header view
             function ($view) {
                 // Get the authenticated user and their permissions 
                 $user = Auth::user()->load('permission');

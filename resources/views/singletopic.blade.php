@@ -1,16 +1,16 @@
+@include('layouts.head')
+{{-- page title --}}
+<title>Fictional Forums - {{ $topic->title  ?: 'Data missing' }}</title>
 @if (!isset($user) || empty($user))
     @abort(500, 'Critical error, contact site administrators')
 @endif
-@include('layouts.head')
-{{-- page title --}}
-<title>Fictional Forums - Recent Posts</title>
 @include('layouts.header')
 <div class="container">
     <div class="row">
         <!-- Posts box -->
         <div class="col-lg-12" style="margin-top: 1.5rem;">
             <div id="postsHead" class="d-flex justify-content-between">
-                <h1>Recent Posts</h1>
+                <h1>Recent Posts in {{ $topic->title  ?: 'Data missing' }}</h1>
                 {{-- TODO, fix permission check --}}
                 @if ($user->permission->create_update_post == 1)
                     <a id="switch" class="btn btn-primary d-flex align-items-center"><i id="minusIcon"
@@ -68,14 +68,10 @@
                             <div class="mb-3">
                                 <label for="topic_id" class="form-label">Post Topic</label>
                                 <select required name="topic_id" id="topic_id" class="form-control">
-                                    @if (!isset($topics) || $topics->isEmpty())
+                                    @if (!isset($topic))
                                         <option value="" disabled>No topics available</option>
                                     @else
-                                        @foreach ($topics as $topic)
-                                            @if (!empty($topic->id) && !empty($topic->title))
-                                                <option value="{{ $topic->id }}">{{ $topic->title }}</option>
-                                            @endif
-                                        @endforeach
+                                        <option value={{ $topic->id }} required>{{ $topic->title }}</option>
                                     @endif
                                 </select>
                             </div>
