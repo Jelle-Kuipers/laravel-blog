@@ -9,7 +9,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item"><a class="nav-link" href={{ route('post@readPosts') }}>Recent posts</a></li>
-                    <li class="nav-item"><a class="nav-link" href={{ route('topic@seeTopics') }}>Topics</a></li>
+                    <li class="nav-item"><a class="nav-link" href={{ route('topic@readTopics') }}>Topics</a></li>
                     @isset($user->hasAdminPermission)
                         <li class="nav-item"><a class="nav-link" href={{ route('admin@panel') }}>Admin Panel</a></li>
                     @endisset

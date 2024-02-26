@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Topic;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\ThumbnailHelper;
+use Carbon\Carbon;
 
 class TopicController extends Controller {
 
@@ -31,6 +32,18 @@ class TopicController extends Controller {
         $topic->thumbnail_path = $thumbnailpath;
         $topic->save();
         return redirect()->back();
+    }
+
+    // Read
+    public function readTopics() {
+        $topics = Topic::latest()->paginate(6);
+        // add the author name, topic, score and variables for showing upvotes
+        foreach ($topics as $topic) {
+            $topic->created = Carbon::createFromFormat('Y-m-d H:i:s', $topic->created_at)->format('d M Y H:i');
+        }
+
+        // return the view with the posts and topics
+        return view('topics', ['topics' => $topics]);
     }
 
     // Update
