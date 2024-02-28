@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Permission;
 use App\Models\User;
+use Carbon\Carbon;
 
 class UserController extends Controller {
 
@@ -51,7 +52,11 @@ class UserController extends Controller {
 
         // Get all users, in a paginated form
         $users = User::paginate(10);
-        return view('users', ['users' => $users, 'specifiedUser' => null]);
+        foreach ($users as $user) {
+            $user->joined = Carbon::createFromFormat('Y-m-d H:i:s', $user->created_at)->format('d M Y H:i');
+            $user->updated = Carbon::createFromFormat('Y-m-d H:i:s', $user->updated_at)->format('d M Y H:i');
+        }
+        return view('adminPanel', ['users' => $users, 'specifiedUser' => null]);
     }
 
     // Read: a specific user

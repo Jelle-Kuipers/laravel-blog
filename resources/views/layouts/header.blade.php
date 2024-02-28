@@ -11,7 +11,7 @@
                     <li class="nav-item"><a class="nav-link" href={{ route('post@readPosts') }}>Recent posts</a></li>
                     <li class="nav-item"><a class="nav-link" href={{ route('topic@readTopics') }}>Topics</a></li>
                     @isset($user->hasAdminPermission)
-                        <li class="nav-item"><a class="nav-link" href={{ route('admin@panel') }}>Admin Panel</a></li>
+                        <li class="nav-item"><a class="nav-link" href={{ route('admin@showUsers') }}>Admin Panel</a></li>
                     @endisset
                 </ul>
             </div>

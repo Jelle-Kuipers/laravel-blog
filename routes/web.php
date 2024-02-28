@@ -103,7 +103,5 @@ Route::middleware([
     'can:isAdmin,App\Models\User',
 ])->group(function () {
 
-    Route::get('admin/panel', function () {
-        return view('admindash');
-    })->name('admin@panel');
+    Route::get('admin/panel', 'App\Http\Controllers\UserController@viewAllUsers')->name('admin@showUsers');
 });
